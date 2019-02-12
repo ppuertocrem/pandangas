@@ -183,8 +183,8 @@ def run_one_level(net, level):
 
     x = solve(a, b)
 
-    p_nodes = np.round(x[: len(g.nodes)], 1)
-    m_dot_pipes = np.round(x[len(g.nodes) : len(g.nodes) + len(g.edges)], 6)
-    m_dot_nodes = np.round(x[len(g.nodes) + len(g.edges) :], 6)
+    p_nodes = x[: len(g.nodes)]
+    m_dot_pipes = x[len(g.nodes) : len(g.nodes) + len(g.edges)]
+    m_dot_nodes = x[len(g.nodes) + len(g.edges) :]
 
     return p_nodes, m_dot_pipes, m_dot_nodes, gas

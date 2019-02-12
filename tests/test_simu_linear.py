@@ -43,7 +43,7 @@ def test_create_k(simple_network):
     k = sim.create_k(graph, gas)
     assert k.shape == (len(graph.edges),)
     for ik in k:
-        assert int(ik) == 499
+        assert int(ik) == 49975
 
 
 def test_create_b(simple_network):
@@ -56,7 +56,7 @@ def test_create_b(simple_network):
     assert b.shape == (20,)
 
 
-def test_run_one_level_BP(simple_network):
+def test_run_one_level_BP_shape(simple_network):
     net = simple_network
     g = top.graphs_by_level_as_dict(net)
     graph = g["BP"]
@@ -64,3 +64,13 @@ def test_run_one_level_BP(simple_network):
     assert p_nodes.shape == (len(graph.nodes),)
     assert m_dot_pipes.shape == (len(graph.edges),)
     assert m_dot_nodes.shape == (len(graph.nodes),)
+
+def test_run_one_level_BP_values(simple_network):
+    net = simple_network
+    g = top.graphs_by_level_as_dict(net)
+    graph = g["BP"]
+    p_nodes, m_dot_pipes, m_dot_nodes, gas = sim.run_one_level(net, "BP")
+
+    assert p_nodes.round().tolist() == [102200., 102190., 102188., 102193., 102190., 102200.]
+    assert m_dot_pipes.round(5).tolist() == [2.1e-04, 2.4e-04, 3.0e-05, 7.0e-05, -1.4e-04, 7.0e-05, -2.0e-04, 1.0e-05]
+    assert m_dot_nodes.round(5).tolist() == [-0.00045, 0.00026, 0.00026, 0., 0.00026, -0.00034]

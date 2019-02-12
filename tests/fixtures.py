@@ -45,7 +45,7 @@ def simple_network():
 
     for u, v in h.edges:
         pg.create_pipe(
-            net, "BUS{}".format(u), "BUS{}".format(v), length_m=100, diameter_m=0.05, name="PIPE{}-{}".format(u, v)
+            net, "BUS{}".format(u), "BUS{}".format(v), length_m=1E4, diameter_m=0.05, name="PIPE{}-{}".format(u, v)
         )
 
     for i in [2, 4, 5]:
