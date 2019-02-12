@@ -6,30 +6,7 @@
 import pytest
 
 from pandangas import pandangas as pg
-
-@pytest.fixture()
-def fix_create():
-    net = pg.create_empty_network()
-
-    busf = pg.create_bus(net, level="MP", name="BUSF")
-    bus0 = pg.create_bus(net, level="MP", name="BUS0")
-
-    bus1 = pg.create_bus(net, level="BP", name="BUS1")
-    bus2 = pg.create_bus(net, level="BP", name="BUS2")
-    bus3 = pg.create_bus(net, level="BP", name="BUS3")
-
-    pg.create_load(net, bus2, p_kW=10.0, name="LOAD2")
-    pg.create_load(net, bus3, p_kW=15.0, name="LOAD3")
-
-    pg.create_pipe(net, busf, bus0, length_m=1000, diameter_m=0.05, name="PIPE0")
-    pg.create_pipe(net, bus1, bus2, length_m=4000, diameter_m=0.05, name="PIPE1")
-    pg.create_pipe(net, bus1, bus3, length_m=5000, diameter_m=0.05, name="PIPE2")
-    pg.create_pipe(net, bus2, bus3, length_m=3000, diameter_m=0.05, name="PIPE3")
-
-    pg.create_station(net, bus0, bus1, p_lim_kW=50, p_Pa=1.022e5, name="STATION")
-    pg.create_feeder(net, busf, p_lim_kW=50, p_Pa=4.5e5, name="FEEDER")
-
-    return net
+from fixtures import fix_create
 
 
 def test_len_of_created_df(fix_create):
