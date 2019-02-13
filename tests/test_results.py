@@ -13,7 +13,6 @@ from fixtures import simple_network
 def test_runpp_nonlinear(simple_network):
     net = simple_network
     res.runpp(net, method="NON-LINEAR")
-    print(set(net.res_bus["p_Pa"].values.tolist()))
     assert set(net.res_bus["p_Pa"].values.tolist()) == {
         89988.0,
         101991.0,
@@ -31,7 +30,6 @@ def test_runpp_nonlinear(simple_network):
 def test_runpp_linear(simple_network):
     net = simple_network
     res.runpp(net, method="LINEAR")
-    print(set(net.res_bus["p_Pa"].values.tolist()))
     assert set(net.res_bus["p_Pa"].values.tolist()) == {102188.0, 102190.0, 89999.0, 90000.0, 102193.0, 102200.0}
     assert set(net.res_pipe["p_kW"].values.tolist()) == {8.0, 9.0, 1.0, 2.5, -5.2, 2.7, -7.7, 0.2, 13.0, 29.9}
     assert set(net.res_pipe["v_m/s"].values.tolist()) == {0.15, 0.17, 0.02, 0.05, -0.1, 0.05, -0.15, 0.0, 0.13, 0.29}
