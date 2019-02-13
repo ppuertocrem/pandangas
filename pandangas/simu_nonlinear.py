@@ -88,6 +88,7 @@ def _eq_p_feed(p_nodes, gr, p_nom, p_ref):
     )
     return p_feed
 
+# TODO: use linear as init (speed up convergence)?
 def _init_variables(gr):
     p_nodes_init = np.array([1.0] * len(gr.nodes))
     m_dot_pipes_init = np.array([1.0] * len(gr.edges))
