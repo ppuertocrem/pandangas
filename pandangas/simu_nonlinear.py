@@ -14,7 +14,7 @@ from thermo.chemical import Chemical
 import pandangas.topology as top
 from pandangas.utilities import get_index
 
-M_DOT_REF = 1E-3
+M_DOT_REF = 1e-3
 
 # TODO: MOVE TO SPECIFIC FILE (utilities.py ?) ++++++++++
 def _scaled_loads_as_dict(net):
@@ -29,6 +29,7 @@ def _scaled_loads_as_dict(net):
     loads.update(stations)
     return loads
 
+
 def _operating_pressures_as_dict(net):
     """
     Map sources (feeders and higher pressure stations) name to operating pressure
@@ -38,13 +39,16 @@ def _operating_pressures_as_dict(net):
     feed.update(stat)
     return feed
 
+
 def create_incidence(graph):
     """
     Create oriented incidence matrix of the given graph
     """
     return nx.incidence_matrix(graph, oriented=True).toarray()
 
+
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 def _dp_from_m_dot_vec(m_dot_ad, l, d, e, fluid):
     m_dot = m_dot_ad * M_DOT_REF
@@ -55,11 +59,14 @@ def _dp_from_m_dot_vec(m_dot_ad, l, d, e, fluid):
     k = fvec.K_from_f(fd=fd, L=l, D=d)
     return fvec.dP_from_K(k, rho=fluid.rho, V=v) / fluid.P
 
+
 def _eq_m_dot_sum(m_dot_pipes, m_dot_nodes, i_mat):
     return np.matmul(i_mat, m_dot_pipes) - m_dot_nodes
 
+
 def _eq_pressure(p_nodes, m_dot_pipes, i_mat, l, d, e, fluid):
     return np.matmul(p_nodes, i_mat) + _dp_from_m_dot_vec(m_dot_pipes, l, d, e, fluid)
+
 
 def _eq_m_dot_node(m_dot_nodes, gr, loads):
     bus_load = np.array(
@@ -69,14 +76,9 @@ def _eq_m_dot_node(m_dot_nodes, gr, loads):
             if data["type"] == "SINK"
         ]
     )
-    bus_node = np.array(
-        [
-            m_dot_nodes[i]
-            for i, (node, data) in enumerate(gr.nodes(data=True))
-            if data["type"] == "NODE"
-        ]
-    )
+    bus_node = np.array([m_dot_nodes[i] for i, (node, data) in enumerate(gr.nodes(data=True)) if data["type"] == "NODE"])
     return np.concatenate((bus_load, bus_node))
+
 
 def _eq_p_feed(p_nodes, gr, p_nom, p_ref):
     p_feed = np.array(
@@ -88,6 +90,7 @@ def _eq_p_feed(p_nodes, gr, p_nom, p_ref):
     )
     return p_feed
 
+
 # TODO: use linear as init (speed up convergence)?
 def _init_variables(gr):
     p_nodes_init = np.array([1.0] * len(gr.nodes))
@@ -95,6 +98,7 @@ def _init_variables(gr):
     m_dot_nodes_init = np.array([0.1] * len(gr.nodes))
 
     return np.concatenate((p_nodes_init, m_dot_pipes_init, m_dot_nodes_init))
+
 
 def _eq_model(x, *args):
     mat, gr, lengths, diameters, roughness, fluid, loads, p_nom, p_ref = args
@@ -105,13 +109,12 @@ def _eq_model(x, *args):
     return np.concatenate(
         (
             _eq_m_dot_sum(m_dot_pipes, m_dot_nodes, mat),
-            _eq_pressure(
-                p_nodes, m_dot_pipes, mat, lengths, diameters, roughness, fluid
-            ),
+            _eq_pressure(p_nodes, m_dot_pipes, mat, lengths, diameters, roughness, fluid),
             _eq_m_dot_node(m_dot_nodes, gr, loads),
             _eq_p_feed(p_nodes, gr, p_nom, p_ref),
         )
     )
+
 
 def run_one_level(net, level):
     """

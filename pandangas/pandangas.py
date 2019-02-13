@@ -4,6 +4,7 @@
 
 import pandas as pd
 
+
 class _Network:
 
     # TODO: add H2/CH4 composition

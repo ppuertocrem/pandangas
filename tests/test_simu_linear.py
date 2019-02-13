@@ -65,12 +65,13 @@ def test_run_one_level_BP_shape(simple_network):
     assert m_dot_pipes.shape == (len(graph.edges),)
     assert m_dot_nodes.shape == (len(graph.nodes),)
 
+
 def test_run_one_level_BP_values(simple_network):
     net = simple_network
     g = top.graphs_by_level_as_dict(net)
     graph = g["BP"]
     p_nodes, m_dot_pipes, m_dot_nodes, gas = sim.run_one_level(net, "BP")
 
-    assert p_nodes.round().tolist() == [102200., 102190., 102188., 102193., 102190., 102200.]
+    assert p_nodes.round().tolist() == [102200.0, 102190.0, 102188.0, 102193.0, 102190.0, 102200.0]
     assert m_dot_pipes.round(5).tolist() == [2.1e-04, 2.4e-04, 3.0e-05, 7.0e-05, -1.4e-04, 7.0e-05, -2.0e-04, 1.0e-05]
-    assert m_dot_nodes.round(5).tolist() == [-0.00045, 0.00026, 0.00026, 0., 0.00026, -0.00034]
+    assert m_dot_nodes.round(5).tolist() == [-0.00045, 0.00026, 0.00026, 0.0, 0.00026, -0.00034]

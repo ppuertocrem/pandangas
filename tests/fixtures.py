@@ -4,6 +4,7 @@ import networkx as nx
 
 from pandangas import pandangas as pg
 
+
 @pytest.fixture()
 def fix_create():
     net = pg.create_empty_network()
@@ -28,6 +29,7 @@ def fix_create():
 
     return net
 
+
 @pytest.fixture()
 def simple_network():
     g = nx.graph_atlas(150)
@@ -45,7 +47,7 @@ def simple_network():
 
     for u, v in h.edges:
         pg.create_pipe(
-            net, "BUS{}".format(u), "BUS{}".format(v), length_m=1E4, diameter_m=0.05, name="PIPE{}-{}".format(u, v)
+            net, "BUS{}".format(u), "BUS{}".format(v), length_m=1e4, diameter_m=0.05, name="PIPE{}-{}".format(u, v)
         )
 
     for i in [2, 4, 5]:

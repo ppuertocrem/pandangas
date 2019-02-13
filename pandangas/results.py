@@ -50,7 +50,9 @@ def runpp(net, t_grnd=10 + 273.15, method="NON-LINEAR"):
         if level in net.bus["level"].unique():
             g = top.graphs_by_level_as_dict(net)
             graph = g[level]
-            p_nodes, m_dot_pipes, m_dot_nodes, fluid = {"NON-LINEAR": sim_nl, "LINEAR": sim_ln}[method].run_one_level(net, level)
+            p_nodes, m_dot_pipes, m_dot_nodes, fluid = {"NON-LINEAR": sim_nl, "LINEAR": sim_ln}[method].run_one_level(
+                net, level
+            )
 
             # Set p_node value in results
             for (node, data), p in zip(graph.nodes(data=True), p_nodes):
