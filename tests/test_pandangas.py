@@ -20,8 +20,8 @@ def test_len_of_created_df(fix_create):
 
 def test_columns_of_created_df(fix_create):
     net = fix_create
-    assert set(net.bus.columns) == {"name", "level", "zone", "type"}
-    assert set(net.pipe.columns) == {"name", "from_bus", "to_bus", "length_m", "diameter_m", "material", "in_service"}
+    assert set(net.bus.columns) == {"name", "level", "zone", "type", "geometry"}
+    assert set(net.pipe.columns) == {"name", "from_bus", "to_bus", "length_m", "diameter_m", "material", "in_service", "geometry"}
     assert set(net.load.columns) == {"name", "bus", "p_kW", "min_p_Pa", "scaling"}
     assert set(net.feeder.columns) == {"name", "bus", "p_lim_kW", "p_Pa"}
     assert set(net.station.columns) == {"name", "bus_high", "bus_low", "p_lim_kW", "p_Pa"}

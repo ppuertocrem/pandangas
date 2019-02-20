@@ -15,16 +15,16 @@ class _Network:
 
     def __init__(self):
 
-        self.bus = pd.DataFrame(columns=["name", "level", "zone", "type"])
+        self.bus = pd.DataFrame(columns=["name", "level", "zone", "type", "geometry"])
         self.pipe = pd.DataFrame(
-            columns=["name", "from_bus", "to_bus", "length_m", "diameter_m", "material", "in_service"]
+            columns=["name", "from_bus", "to_bus", "length_m", "diameter_m", "material", "in_service", "geometry"]
         )
         self.load = pd.DataFrame(columns=["name", "bus", "p_kW", "min_p_Pa", "scaling"])
         self.feeder = pd.DataFrame(columns=["name", "bus", "p_lim_kW", "p_Pa"])
         self.station = pd.DataFrame(columns=["name", "bus_high", "bus_low", "p_lim_kW", "p_Pa"])
 
-        self.res_bus = pd.DataFrame(columns=["name", "p_Pa", "p_bar"])
-        self.res_pipe = pd.DataFrame(columns=["name", "m_dot_kg/s", "v_m/s", "p_kW", "loading_%"])
+        self.res_bus = pd.DataFrame(columns=["name", "p_Pa", "p_bar", "geometry"])
+        self.res_pipe = pd.DataFrame(columns=["name", "m_dot_kg/s", "v_m/s", "p_kW", "loading_%", "geometry"])
         self.res_feeder = pd.DataFrame(columns=["name", "m_dot_kg/s", "p_kW", "loading_%"])
         self.res_station = pd.DataFrame(columns=["name", "m_dot_kg/s", "p_kW", "loading_%"])
 
@@ -117,7 +117,7 @@ def create_empty_network():
     return _Network()
 
 
-def create_bus(net, level, name, zone=None):
+def create_bus(net, level, name, zone=None, geometry=None):
     """
     Create a bus on a given network
 
@@ -134,12 +134,12 @@ def create_bus(net, level, name, zone=None):
         raise ValueError(msg)
 
     idx = len(net.bus.index)
-    net.bus.loc[idx] = [name, level, zone, "NODE"]
+    net.bus.loc[idx] = [name, level, zone, "NODE", geometry]
     return name
 
 
 # TODO: add pipe material into pipe creation and simulation
-def create_pipe(net, from_bus, to_bus, length_m, diameter_m, name, material="steel", in_service=True):
+def create_pipe(net, from_bus, to_bus, length_m, diameter_m, name, material="steel", in_service=True, geometry=None):
     """
     Create a pipe between two existing buses on a given network
 
@@ -158,7 +158,7 @@ def create_pipe(net, from_bus, to_bus, length_m, diameter_m, name, material="ste
     _check_level(net, from_bus, to_bus)
 
     idx = len(net.pipe.index)
-    net.pipe.loc[idx] = [name, from_bus, to_bus, length_m, diameter_m, material, in_service]
+    net.pipe.loc[idx] = [name, from_bus, to_bus, length_m, diameter_m, material, in_service, geometry]
     return name
 
 

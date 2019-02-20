@@ -40,7 +40,7 @@ def runpp(net, t_grnd=10 + 273.15, method="NON-LINEAR"):
     # Set results for pipes not in service
     for pipe in net.pipe.loc[net.pipe["in_service"] == False, "name"].values:
         idx = get_index(pipe, net.pipe)
-        net.res_pipe.loc[idx] = [pipe, 0.0, 0.0, 0.0, 0]
+        net.res_pipe.loc[idx] = [pipe, 0.0, 0.0, 0.0, 0, pipe["geometry"]]
 
     # Run simulation by pressure level (from lower to higher)
     sorted_levels = sorted(net.LEVELS.items(), key=operator.itemgetter(1))
@@ -56,7 +56,12 @@ def runpp(net, t_grnd=10 + 273.15, method="NON-LINEAR"):
 
             # Set p_node value in results
             for (node, data), p in zip(graph.nodes(data=True), p_nodes):
-                net.res_bus.loc[data["index"]] = [node, round(p), round(p * 1e-5, 2)]
+                net.res_bus.loc[data["index"]] = [
+                    node,
+                    round(p),
+                    round(p * 1e-5, 2),
+                    data["geometry"]
+                ]
 
             # Set m_dot_pip value in results
             data_pipes = [data for u, v, data in graph.edges(data=True) if data["type"] == "PIPE"]
@@ -68,6 +73,7 @@ def runpp(net, t_grnd=10 + 273.15, method="NON-LINEAR"):
                     round(v, 2),
                     round(m_dot * net.LHV, 1),
                     round(abs(100 * v / net.V_MAX), 1),
+                    data["geometry"]
                 ]
 
             # Set m_dot_pip value in results

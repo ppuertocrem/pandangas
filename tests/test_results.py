@@ -38,8 +38,8 @@ def test_runpp_linear(simple_network):
 def test_columns_of_created_df_nonlinear(simple_network):
     net = simple_network
     res.runpp(net, method="NON-LINEAR")
-    assert set(net.res_bus.columns) == {"name", "p_Pa", "p_bar"}
-    assert set(net.res_pipe.columns) == {"name", "m_dot_kg/s", "v_m/s", "p_kW", "loading_%"}
+    assert set(net.res_bus.columns) == {"name", "p_Pa", "p_bar", "geometry"}
+    assert set(net.res_pipe.columns) == {"name", "m_dot_kg/s", "v_m/s", "p_kW", "loading_%", "geometry"}
     assert set(net.res_feeder.columns) == {"name", "m_dot_kg/s", "p_kW", "loading_%"}
     assert set(net.res_station.columns) == {"name", "m_dot_kg/s", "p_kW", "loading_%"}
     assert len(net.res_bus) == 9
@@ -51,8 +51,8 @@ def test_columns_of_created_df_nonlinear(simple_network):
 def test_columns_of_created_df_linear(simple_network):
     net = simple_network
     res.runpp(net, method="LINEAR")
-    assert set(net.res_bus.columns) == {"name", "p_Pa", "p_bar"}
-    assert set(net.res_pipe.columns) == {"name", "m_dot_kg/s", "v_m/s", "p_kW", "loading_%"}
+    assert set(net.res_bus.columns) == {"name", "p_Pa", "p_bar", "geometry"}
+    assert set(net.res_pipe.columns) == {"name", "m_dot_kg/s", "v_m/s", "p_kW", "loading_%", "geometry"}
     assert set(net.res_feeder.columns) == {"name", "m_dot_kg/s", "p_kW", "loading_%"}
     assert set(net.res_station.columns) == {"name", "m_dot_kg/s", "p_kW", "loading_%"}
     assert len(net.res_bus) == 9

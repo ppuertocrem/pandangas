@@ -13,17 +13,42 @@ def create_nxgraph(net, only_in_service=True):
     g = nx.OrderedDiGraph()
 
     for idx, row in net.bus.iterrows():
-        g.add_node(row[0], index=idx, level=row[1], zone=row[2], type=row[3])
+        g.add_node(
+            row["name"], 
+            index=idx,
+            level=row["level"],
+            zone=row["zone"],
+            type=row["type"],
+            geometry=row["geometry"]
+        )
 
     pipes = net.pipe
     if only_in_service:
         pipes = pipes.loc[pipes["in_service"] != False]
 
     for idx, row in pipes.iterrows():
-        g.add_edge(row[1], row[2], name=row[0], index=idx, L_m=row[3], D_m=row[4], mat=row[5], type="PIPE")
+        g.add_edge(
+            row["from_bus"],
+            row["to_bus"],
+            name=row["name"],
+            index=idx,
+            L_m=row["length_m"],
+            D_m=row["diameter_m"],
+            mat=row["material"],
+            type="PIPE",
+            geometry=row["geometry"],
+        )
 
     for idx, row in net.station.iterrows():
-        g.add_edge(row[1], row[2], name=row[0], index=idx, p_lim_kw=row[3], p_bar=row[4], type="STATION")
+        g.add_edge(
+            row["bus_high"],
+            row["bus_low"],
+            name=row["name"],
+            index=idx,
+            p_lim_kw=row["p_lim_kW"],
+            p_Pa=row["p_Pa"],
+            type="STATION",
+        )
 
     return g
 
