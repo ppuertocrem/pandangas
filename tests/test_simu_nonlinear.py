@@ -45,3 +45,7 @@ def test_run_one_level_BP_values(simple_network):
     assert p_nodes.round().tolist() == [102200.0, 101991.0, 101965.0, 102063.0, 101998.0, 102200.0]
     assert m_dot_pipes.round(5).tolist() == [2.1e-04, 2.4e-04, 3.0e-05, 7.0e-05, -1.4e-04, 7.0e-05, -2.0e-04, 1.0e-05]
     assert m_dot_nodes.round(5).tolist() == [-0.00045, 0.00026, 0.00026, 0.0, 0.00026, -0.00034]
+
+# TODO: non-linear method do not like (ZeroDivisionError) null mass flows (in dead-end pipes)?
+def test_run_with_dead_end_pipes():
+    pass
