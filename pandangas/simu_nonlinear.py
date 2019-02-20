@@ -13,6 +13,7 @@ from thermo.chemical import Chemical
 
 import pandangas.topology as top
 from pandangas.utilities import get_index
+from pandangas.simu_linear import run_one_level as run_linear
 
 M_DOT_REF = 1e-3
 
@@ -45,7 +46,6 @@ def create_incidence(graph):
     Create oriented incidence matrix of the given graph
     """
     return nx.incidence_matrix(graph, oriented=True).toarray()
-
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -91,15 +91,6 @@ def _eq_p_feed(p_nodes, gr, p_nom, p_ref):
     return p_feed
 
 
-# TODO: use linear as init (speed up convergence)?
-def _init_variables(gr):
-    p_nodes_init = np.array([1.0] * len(gr.nodes))
-    m_dot_pipes_init = np.array([1.0] * len(gr.edges))
-    m_dot_nodes_init = np.array([0.1] * len(gr.nodes))
-
-    return np.concatenate((p_nodes_init, m_dot_pipes_init, m_dot_nodes_init))
-
-
 def _eq_model(x, *args):
     mat, gr, lengths, diameters, roughness, fluid, loads, p_nom, p_ref = args
     p_nodes = x[: len(gr.nodes)]
@@ -126,7 +117,9 @@ def run_one_level(net, level):
     loads = _scaled_loads_as_dict(net)
     p_ops = _operating_pressures_as_dict(net)
 
-    x0 = _init_variables(g)
+    p_nodes_i, m_dot_pipes_i, m_dot_nodes_i, gas = run_linear(net, level)
+    x0 = np.concatenate((p_nodes_i, m_dot_pipes_i, m_dot_nodes_i))
+
     i_mat = create_incidence(g)
 
     leng = np.array([data["L_m"] for _, _, data in g.edges(data=True)])

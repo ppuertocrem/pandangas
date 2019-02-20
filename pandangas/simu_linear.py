@@ -12,7 +12,7 @@ from thermo.chemical import Chemical
 import pandangas.topology as top
 from pandangas.utilities import get_index
 
-
+# TODO: MOVE TO SPECIFIC FILE (utilities.py ?) ++++++++++
 def _scaled_loads_as_dict(net):
     """
     Maps sinks (loads and lower pressure stations) name to scaled load
@@ -41,6 +41,8 @@ def create_incidence(graph):
     Create oriented incidence matrix of the given graph
     """
     return nx.incidence_matrix(graph, oriented=True).toarray()
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 def create_k(graph, fluid):
