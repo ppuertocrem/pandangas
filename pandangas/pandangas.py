@@ -162,7 +162,7 @@ def create_pipe(net, from_bus, to_bus, length_m, diameter_m, name, material="ste
     return name
 
 
-def create_load(net, bus, p_kW, name, min_p_Pa=0.022e5, scaling=1.0):
+def create_load(net, bus, p_kW, name, min_p_Pa=1.018e5, scaling=1.0):
     """
     Create a load attached to an existing bus in a given network
 

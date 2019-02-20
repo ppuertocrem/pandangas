@@ -119,8 +119,8 @@ def run_one_level(net, level):
 
     p_nodes_i, m_dot_pipes_i, m_dot_nodes_i, gas = run_linear(net, level)
     x0 = np.concatenate((p_nodes_i, m_dot_pipes_i, m_dot_nodes_i))
-    x0 *= np.random.normal(loc=1, scale=0.1, size=len(x0))
     x0 = np.clip(x0, a_min=1e-1, a_max=None)
+    x0 *= np.random.normal(loc=1, scale=0.1, size=len(x0))
 
     i_mat = create_incidence(g)
 
