@@ -14,8 +14,8 @@
 
 # TODO: proper usage of node VS bus
 
-from math import pi
 import operator
+from math import pi
 
 from geopandas import GeoDataFrame
 
@@ -48,13 +48,24 @@ def runpp(net, t_grnd=10 + 273.15, method="NON-LINEAR"):
     sorted_levels = sorted(net.LEVELS.items(), key=operator.itemgetter(1))
     for level, value in sorted_levels:
         # Check if level exists
-        # TODO: Why not looping over net.bus["level"].unique() ???
         if level in net.bus["level"].unique():
             g = top.graphs_by_level_as_dict(net)
             graph = g[level]
-            p_nodes, m_dot_pipes, m_dot_nodes, fluid = {"NON-LINEAR": sim_nl, "LINEAR": sim_ln}[method].run_one_level(
-                net, level
-            )
+            p_nodes, m_dot_pipes, m_dot_nodes, fluid = {
+                "NON-LINEAR": sim_nl,
+                "LINEAR": sim_ln
+            }[method].run_one_level(net, level)
+
+            # with warnings.catch_warnings():
+            #     np.seterr(all='warn')
+            #     try:
+            #         p_nodes, m_dot_pipes, m_dot_nodes, fluid = {
+            #             "NON-LINEAR": sim_nl,
+            #             "LINEAR": sim_ln
+            #             }[method].run_one_level(net, level)
+            #     except RuntimeWarning as e:
+            #         logging.error('The simulation did not converged ! (level: {})'.format(level))
+            #         raise
 
             # Set p_node value in results
             for (node, data), p in zip(graph.nodes(data=True), p_nodes):

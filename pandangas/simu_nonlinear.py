@@ -2,6 +2,7 @@
 
 """Non-linear simulation module."""
 
+import scipy
 from math import pi
 import numpy as np
 import networkx as nx
@@ -14,6 +15,12 @@ from thermo.chemical import Chemical
 import pandangas.topology as top
 from pandangas.utilities import get_index
 from pandangas.simu_linear import run_one_level as run_linear
+
+import logging
+import warnings
+
+np.seterr(all='raise')
+scipy.seterr(all='raise')
 
 M_DOT_REF = 1e-3
 
@@ -119,8 +126,8 @@ def run_one_level(net, level):
 
     p_nodes_i, m_dot_pipes_i, m_dot_nodes_i, gas = run_linear(net, level)
     x0 = np.concatenate((p_nodes_i, m_dot_pipes_i, m_dot_nodes_i))
+    x0 *= np.random.normal(loc=1, scale=0.01, size=len(x0))
     x0 = np.clip(x0, a_min=1e-1, a_max=None)
-    x0 *= np.random.normal(loc=1, scale=0.1, size=len(x0))
 
     i_mat = create_incidence(g)
 
@@ -130,7 +137,11 @@ def run_one_level(net, level):
     materials = np.array([data["mat"] for _, _, data in g.edges(data=True)])
     eps = np.array([fluids.material_roughness(m) for m in materials])
 
-    res = fsolve(_eq_model, x0, args=(i_mat, g, leng, diam, eps, gas, loads, p_ops, gas.P))
+    try:
+        res = fsolve(_eq_model, x0, args=(i_mat, g, leng, diam, eps, gas, loads, p_ops, gas.P))
+    except RuntimeWarning as e:
+        logging.error('The simulation did not converged ! (level: {})'.format(level))
+        raise
 
     p_nodes = res[: len(g.nodes)] * gas.P
     m_dot_pipes = res[len(g.nodes) : len(g.nodes) + len(g.edges)] * M_DOT_REF

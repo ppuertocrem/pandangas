@@ -63,3 +63,31 @@ def simple_network():
     pg.create_feeder(net, "BUSMPF", p_lim_kW=50, p_Pa=0.9e5, name="FEEDER")
 
     return net
+
+@pytest.fixture()
+def dead_end_pipes():
+    net = pg.create_empty_network()
+
+    busf = pg.create_bus(net, level="MP", name="BUSF")
+    bus0 = pg.create_bus(net, level="MP", name="BUS0")
+
+    bus1 = pg.create_bus(net, level="BP", name="BUS1")
+    bus2 = pg.create_bus(net, level="BP", name="BUS2")
+    bus3 = pg.create_bus(net, level="BP", name="BUS3")
+    bus4 = pg.create_bus(net, level="BP", name="BUS4")
+    bus5 = pg.create_bus(net, level="BP", name="BUS5")
+
+    pg.create_load(net, bus2, p_kW=10.0, name="LOAD2")
+    pg.create_load(net, bus3, p_kW=15.0, name="LOAD3")
+
+    pg.create_pipe(net, busf, bus0, length_m=1e3, diameter_m=0.05, name="PIPE0")
+    pg.create_pipe(net, bus1, bus2, length_m=4e3, diameter_m=0.05, name="PIPE1")
+    pg.create_pipe(net, bus1, bus3, length_m=5e3, diameter_m=0.05, name="PIPE2")
+    pg.create_pipe(net, bus2, bus3, length_m=3e3, diameter_m=0.05, name="PIPE3")
+    pg.create_pipe(net, bus3, bus4, length_m=1e3, diameter_m=0.05, name="PIPE4")
+    pg.create_pipe(net, bus4, bus5, length_m=1e3, diameter_m=0.05, name="PIPE5")
+
+    pg.create_station(net, bus0, bus1, p_lim_kW=50, p_Pa=1.022e5, name="STATION")
+    pg.create_feeder(net, busf, p_lim_kW=50, p_Pa=5.5e5, name="FEEDER")
+
+    return net

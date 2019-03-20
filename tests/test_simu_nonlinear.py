@@ -11,7 +11,9 @@ from thermo.chemical import Chemical
 
 from pandangas import simu_nonlinear as sim
 from pandangas import topology as top
-from fixtures import simple_network
+from pandangas import results as res
+
+from fixtures import simple_network, dead_end_pipes
 
 
 def test_dp_from_m_dot():
@@ -46,6 +48,7 @@ def test_run_one_level_BP_values(simple_network):
     assert m_dot_pipes.round(5).tolist() == [2.1e-04, 2.4e-04, 3.0e-05, 7.0e-05, -1.4e-04, 7.0e-05, -2.0e-04, 1.0e-05]
     assert m_dot_nodes.round(5).tolist() == [-0.00045, 0.00026, 0.00026, 0.0, 0.00026, -0.00034]
 
-# TODO: non-linear method do not like (ZeroDivisionError) null mass flows (in dead-end pipes)?
-def test_run_with_dead_end_pipes():
-    pass
+# TODO: non-linear method do not like (ZeroDivisionError ?) null mass flows (in dead-end pipes)?
+def test_run_with_dead_end_pipes(dead_end_pipes):
+    net = dead_end_pipes
+    res.runpp(net, method="NON-LINEAR")
