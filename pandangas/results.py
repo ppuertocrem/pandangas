@@ -17,6 +17,8 @@
 from math import pi
 import operator
 
+from geopandas import GeoDataFrame
+
 import pandangas.topology as top
 import pandangas.simu_linear as sim_ln
 import pandangas.simu_nonlinear as sim_nl
@@ -99,3 +101,9 @@ def runpp(net, t_grnd=10 + 273.15, method="NON-LINEAR"):
                         m_dot * net.LHV,
                         round(abs(100 * m_dot * net.LHV / net.feeder.at[idx_feed, "p_lim_kW"]), 1),
                     ]
+
+
+def geospatialize(net, crs='epsg:2056'):
+    for df in ["bus", "pipe"]:
+        setattr(net, df, GeoDataFrame(getattr(net, df), crs=crs))
+        setattr(net, "res_"+df, GeoDataFrame(getattr(net, "res_"+df), crs=crs))

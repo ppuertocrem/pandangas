@@ -59,3 +59,5 @@ def test_columns_of_created_df_linear(simple_network):
     assert len(net.res_pipe) == 10
     assert len(net.res_feeder) == 1
     assert len(net.res_station) == 2
+
+# TODO: Add tests for geospatialize

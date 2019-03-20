@@ -7,4 +7,4 @@ __email__ = "info@crem.ch"
 __version__ = "__version__ = '0.1.1'"
 
 from pandangas.pandangas import *
-from pandangas.results import runpp
+from pandangas.results import runpp, geospatialize
